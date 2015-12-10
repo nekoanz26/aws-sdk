@@ -1,0 +1,1 @@
+MeteorJS wrapper for AWS-SDK
