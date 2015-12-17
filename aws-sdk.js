@@ -12,13 +12,20 @@ S3 = {
             self.config();
         }
         var bucket = new AWS.S3({params: {Bucket: self.settings.aws.bucket}});
-        bucket.putObject({
-            Key: params.directory + '/' + params.basename,
-            Body: fs.createReadStream( params.filename )
-        }, function (err, data) {
-            console.log(err);
-            console.log(data);
-        });
+
+        function doUpload(callback){
+            bucket.putObject({
+                Key: params.directory + '/' + params.basename,
+                Body: fs.createReadStream( params.filename )
+            }, function (err, data) {
+                if (err) throw new Error(err.message);
+                callback(null,data);
+            });
+        }
+        var asyncUpload = Meteor.wrapAsync(doUpload);
+        var res = asyncUpload();
+        return res;
+
     },
     download: function(params) {
         var self = this;
@@ -32,15 +39,12 @@ S3 = {
             bucket.getObject({
                 Key: file_path
             }, function(err, data) {
-                if (err) throw new Error(err.message)
-                callback(null, data);
+                callback(err, data);
             });
         }
 
         var asyncDownload = Meteor.wrapAsync(doDownload);
-        console.log('start');
         var res = asyncDownload();
-        console.log(res.Body);
         return res;
     },
     config: function(settings) {

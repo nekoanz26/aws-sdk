@@ -1,6 +1,6 @@
 Package.describe({
     name: 'nekoanz:aws-sdk',
-    version: '0.0.1',
+    version: '0.0.3',
     // Brief, one-line summary of the package.
     summary: 'meteor remove npm-container <br> meteor update meteorhacks:npm',
     // URL to the Git repository containing the source code for this package.
